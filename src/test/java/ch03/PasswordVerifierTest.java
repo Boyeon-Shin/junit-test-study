@@ -1,6 +1,7 @@
 package ch03;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -32,7 +33,29 @@ class PasswordVerifierTest {
             }
         }
 
-        // 이 테스트는 주말에만 실행
+        // 이 테스트는 주말에만
+        @Test
+        void testOnlyOnWeekend() {
+            if (!(dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY)) {
+                return;
+            }
+
+            RuntimeException e = assertThrows(RuntimeException.class, () -> {
+                passwordVerifier.verifyPassword("anything", List.of());
+            });
+            assertEquals("It's the weekend!", e.getMessage());
+        }
+
+        @Test
+        void testOnlyOnWeekendAssertTrue() {
+            assumeTrue(dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY);
+
+            RuntimeException e = assertThrows(RuntimeException.class, () -> {
+                passwordVerifier.verifyPassword("anything", List.of());
+            });
+            assertEquals("It's the weekend!", e.getMessage());
+        }
     }
+
 
 }
