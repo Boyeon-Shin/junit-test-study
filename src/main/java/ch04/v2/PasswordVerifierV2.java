@@ -1,5 +1,6 @@
-package ch04;
+package ch04.v2;
 
+import ch04.v3.Logger;
 import java.util.List;
 import java.util.function.Predicate;
 

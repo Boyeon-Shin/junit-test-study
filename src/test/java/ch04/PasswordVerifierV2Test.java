@@ -2,6 +2,8 @@ package ch04;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import ch04.v2.PasswordVerifierV2;
+import ch04.v3.Logger;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -17,6 +19,8 @@ class PasswordVerifierV2Test {
             public void info(String text) {
                 written[0] = text;
             }
+            @Override
+            public void debug(String text) {}
         };
 
         PasswordVerifierV2 verifier = new PasswordVerifierV2();
