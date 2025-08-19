@@ -5,6 +5,9 @@ import static org.mockito.BDDMockito.given;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 
+import ch05.moduleMock.ComplicatedLogger;
+import ch05.moduleMock.ConfigurationService;
+import ch05.moduleMock.PasswordVerifier;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

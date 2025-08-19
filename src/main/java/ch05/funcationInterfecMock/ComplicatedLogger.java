@@ -1,6 +1,5 @@
-package ch05.v1;
+package ch05.funcationInterfecMock;
 
 public interface ComplicatedLogger {
     void info(String text);
-    void debug(String text);
 }

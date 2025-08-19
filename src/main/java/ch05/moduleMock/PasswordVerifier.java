@@ -1,4 +1,4 @@
-package ch05.v1;
+package ch05.moduleMock;
 
 import java.util.List;
 import java.util.function.Predicate;
