@@ -14,12 +14,14 @@ dependencies {
     implementation("org.projectlombok:lombok:1.18.32")
     annotationProcessor("org.projectlombok:lombok:1.18.32")
     testImplementation("org.assertj:assertj-core:3.25.3")
-
     implementation ("org.slf4j:slf4j-api:2.0.13")
     implementation ("ch.qos.logback:logback-classic:1.4.14")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation(kotlin("stdlib-jdk8"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.12.0")
+    testImplementation("org.mockito:mockito-core:5.12.0")
 }
 
 tasks.test {

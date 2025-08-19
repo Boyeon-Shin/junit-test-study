@@ -14,6 +14,7 @@ public class PasswordVerifierV3 {
 
     private void log(String message) {
         String level = config.getLogLevel();
+
         if ("info".equals(level)) {
             logger.info(message);
         } else if ("debug".equals(level)) {
