@@ -2,6 +2,7 @@ package ch05.stub;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 import java.util.function.Supplier;
 import org.junit.jupiter.api.Test;
@@ -10,13 +11,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class JestReturnValuesTest {
+class ReturnValuesTest {
 
     @Mock
     Supplier<String> stubFunc;
 
+
     @Test
     void fakeSameReturnValues() {
+//        Supplier<String> fake = mock(Supplier.class);
+
         given(stubFunc.get()).willReturn("abc");
 
         // 값이 동일하게 유지됨

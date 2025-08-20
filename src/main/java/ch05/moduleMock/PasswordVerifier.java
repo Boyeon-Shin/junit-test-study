@@ -24,6 +24,7 @@ public class PasswordVerifier {
     }
     public boolean verifyPassword(String input, List<Predicate<String>> rules) {
         boolean passed = rules.stream().allMatch(rule -> rule.test(input));
+        rules.stream().allMatch(rule -> rule.test(input));
         log(passed ? "Passed" : "Failed");
         return passed;
     }
