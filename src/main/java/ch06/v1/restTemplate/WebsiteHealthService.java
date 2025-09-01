@@ -1,6 +1,6 @@
-package ch06.v1;
+package ch06.v1.restTemplate;
 
-import java.net.http.HttpClient;
+import ch06.v1.HealthResult;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
