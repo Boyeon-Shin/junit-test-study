@@ -5,55 +5,69 @@ import static org.junit.jupiter.api.Assertions.*;
 import ch06.v1.HealthResult;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 
 class WebsiteHealthServiceTest {
 
-    WebsiteHealthService sut = new WebsiteHealthService(null); // RestTemplate 필요 없음
-
     @Test
-     void contentMatchesReturnsTrue() throws Exception {
-        CountDownLatch latch = new CountDownLatch(1);
-        final HealthResult[] box = new HealthResult[1];
+    void contentMatches_returnsTrue() throws Exception {
+        WebsiteHealthService service = new WebsiteHealthService();
 
-        sut.processFetchSuccess("illustrative", r -> {
-            box[0] = r;
+        CountDownLatch latch = new CountDownLatch(1);
+        AtomicReference<HealthResult> ref = new AtomicReference<>();
+
+        service.processFetchSuccess("illustrative", result -> {
+            ref.set(result);
             latch.countDown();
         });
 
-        assertTrue(latch.await(1, TimeUnit.SECONDS));
-        assertTrue(box[0].success());
-        assertEquals("ok", box[0].status());
+        assertTrue(latch.await(2, TimeUnit.SECONDS), "콜백이 호출되지 않았습니다");
+
+        HealthResult r = ref.get();
+        assertNotNull(r);
+        assertTrue(r.success());
+        assertEquals("ok", r.status());
     }
 
     @Test
-    void websiteContentDoesNotMatchReturnsFalse() throws Exception {
-        CountDownLatch latch = new CountDownLatch(1);
-        final HealthResult[] box = new HealthResult[1];
+    void contentNotMatch_returnsFalse() throws Exception {
+        WebsiteHealthService service = new WebsiteHealthService();
 
-        sut.processFetchSuccess("bad content", r -> {
-            box[0] = r;
+        CountDownLatch latch = new CountDownLatch(1);
+        AtomicReference<HealthResult> ref = new AtomicReference<>();
+
+        service.processFetchSuccess("bad content", result -> {
+            ref.set(result);
             latch.countDown();
         });
 
-        assertTrue(latch.await(1, TimeUnit.SECONDS));
-        assertFalse(box[0].success());
-        assertEquals("missing text", box[0].status());
+        assertTrue(latch.await(2, TimeUnit.SECONDS), "콜백이 호출되지 않았습니다");
+
+        HealthResult r = ref.get();
+        assertNotNull(r);
+        assertFalse(r.success());
+        assertEquals("missing text", r.status());
     }
 
     @Test
-    void whenFetchFailsReturnsFalse() throws Exception {
-        CountDownLatch latch = new CountDownLatch(1);
-        final HealthResult[] box = new HealthResult[1];
+    void whenFetchFails_returnsFalse() throws Exception {
+        WebsiteHealthService service = new WebsiteHealthService();
 
-        sut.processFetchError(new Exception("error text"), r -> {
-            box[0] = r;
+        CountDownLatch latch = new CountDownLatch(1);
+        AtomicReference<HealthResult> ref = new AtomicReference<>();
+
+        service.processFetchError(new RuntimeException("error text"), result -> {
+            ref.set(result);
             latch.countDown();
         });
 
-        assertTrue(latch.await(1, TimeUnit.SECONDS));
-        assertFalse(box[0].success());
-        assertEquals("error text", box[0].status());
+        assertTrue(latch.await(2, TimeUnit.SECONDS), "콜백이 호출되지 않았습니다");
+
+        HealthResult r = ref.get();
+        assertNotNull(r);
+        assertFalse(r.success());
+        assertEquals("error text", r.status());
     }
 
 }

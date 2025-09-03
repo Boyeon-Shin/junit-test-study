@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Test;
 
 class WebsiteHealthServiceTest {
 
-    WebsiteHealthService sut = new WebsiteHealthService(null); // RestTemplate 안 씀
-
     @Test
     void onFetchSuccessWithGoodContentReturnsTrue() {
-        HealthResult result = sut.processFetchContent("illustrative");
+        WebsiteHealthService service = new WebsiteHealthService();
+
+        HealthResult result = service.processFetchContent("illustrative");
 
         assertTrue(result.success());
         assertEquals("ok", result.status());
@@ -19,17 +19,20 @@ class WebsiteHealthServiceTest {
 
     @Test
     void onFetchSuccessWithBadContentReturnsFalse() {
-        HealthResult result = sut.processFetchContent("text not on site");
+        WebsiteHealthService service = new WebsiteHealthService();
+
+        HealthResult result = service.processFetchContent("text not on site");
 
         assertFalse(result.success());
         assertEquals("missing text", result.status());
     }
 
     @Test
-    void onFetchFailThrows() {
-        Exception ex = assertThrows(RuntimeException.class,
-                () -> sut.processFetchError(new RuntimeException("error text")));
-        assertEquals("error text", ex.getMessage());
-    }
+    void onFetchFailReturnsHealthResultWithErrorMessage() {
+        WebsiteHealthService service = new WebsiteHealthService();
+        HealthResult result = service.processFetchError(new RuntimeException("error text"));
 
+        assertFalse(result.success());
+        assertEquals("error text", result.status());
+    }
 }

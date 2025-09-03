@@ -1,39 +1,43 @@
 package ch06.v2;
 
 import ch06.v1.HealthResult;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.concurrent.CompletableFuture;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.function.Consumer;
 
 public class WebsiteHealthService {
-    private final RestTemplate restTemplate;
+
+    private final HttpClient client;
     private final String url = "http://example.com";
 
-    public WebsiteHealthService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public WebsiteHealthService() {
+        this.client = HttpClient.newHttpClient(); // 기본 HttpClient
     }
 
     /** ------------------- 진입점 1 -------------------
-     *  외부 호출 + 콜백
+     *  외부 호출 + 콜백 (비동기)
      */
     public void isWebsiteAlive(Consumer<HealthResult> callback) {
-        CompletableFuture.runAsync(() -> {
-            try {
-                ResponseEntity<String> resp = restTemplate.getForEntity(url, String.class);
-                throwOnInvalidResponse(resp);
-                String body = resp.getBody() == null ? "" : resp.getBody();
-                processFetchSuccess(body, callback);
-            } catch (Exception e) {
-                processFetchError(e, callback);
-            }
-        });
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .GET()
+                .build();
+
+        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenApply(this::throwOnInvalidResponse)  // 응답 검증
+                .thenApply(HttpResponse::body)            // body 추출
+                .thenAccept(body -> processFetchSuccess(body, callback)) // 성공 처리
+                .exceptionally(err -> { // 오류 처리
+                    processFetchError(err, callback);
+                    return null;
+                });
     }
 
-    private ResponseEntity<String> throwOnInvalidResponse(ResponseEntity<String> resp) {
-        if (!resp.getStatusCode().is2xxSuccessful()) {
-            throw new RuntimeException(resp.getStatusCode().toString());
+    private HttpResponse<String> throwOnInvalidResponse(HttpResponse<String> resp) {
+        if (resp.statusCode() / 100 != 2) {
+            throw new RuntimeException("HTTP " + resp.statusCode());
         }
         return resp;
     }
@@ -52,7 +56,7 @@ public class WebsiteHealthService {
     /** ------------------- 진입점 3 -------------------
      *  오류 로직만 따로 분리 (순수 함수)
      */
-    public void processFetchError(Exception err, Consumer<HealthResult> callback) {
+    public void processFetchError(Throwable err, Consumer<HealthResult> callback) {
         callback.accept(new HealthResult(false, err.getMessage()));
     }
 }

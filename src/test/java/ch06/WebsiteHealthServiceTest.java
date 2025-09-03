@@ -3,7 +3,7 @@ package ch06;
 import static org.junit.jupiter.api.Assertions.*;
 
 import ch06.v1.HealthResult;
-import ch06.v1.WebsiteHealthService;
+import ch06.v1.restTemplate.WebsiteHealthService;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
