@@ -12,13 +12,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class WebsiteVerifierTest {
+class WebsiteHealthServiceTest {
 
     @Mock
     private NetworkAdapter network;
 
     @InjectMocks
-    private WebsiteVerifier verifier;  // @Mock 된 필드를 주입받음
+    private WebsiteHealthService verifier;  // @Mock 된 필드를 주입받음
 
     @Test
     void withGoodContentReturnsTrue() {

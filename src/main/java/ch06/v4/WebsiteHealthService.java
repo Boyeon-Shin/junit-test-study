@@ -3,11 +3,11 @@ package ch06.v4;
 import ch06.v1.HealthResult;
 import java.util.concurrent.CompletableFuture;
 
-public class WebsiteVerifier {
+public class WebsiteHealthService {
 
     private final NetworkAdapter network;
 
-    public WebsiteVerifier(NetworkAdapter network) {
+    public WebsiteHealthService(NetworkAdapter network) {
         this.network = network;
     }
 
