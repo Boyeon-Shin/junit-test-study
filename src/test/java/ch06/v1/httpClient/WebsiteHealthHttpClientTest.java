@@ -18,7 +18,7 @@ class WebsiteHealthHttpClientTest {
 
     @Test
     void callbackVersionShouldReturnOk() throws InterruptedException {
-        CountDownLatch latch = new CountDownLatch(1);
+        CountDownLatch latch = new CountDownLatch(1); //콜백 완료를 기다리는 장치
 
         service.isWebsiteAliveWithCallback(result -> {
             try {
@@ -41,7 +41,7 @@ class WebsiteHealthHttpClientTest {
         service.isWebsiteAliveWithAsyncAwait()
                 .thenAccept(result -> {
                     try {
-                        assertThat(result.success()).isTrue();
+                        assertThat(result.success()).isFalse();
                         assertThat(result.status()).isEqualTo("ok");
                     } finally {
                         latch.countDown();
@@ -51,6 +51,7 @@ class WebsiteHealthHttpClientTest {
         boolean completed = latch.await(10, TimeUnit.SECONDS);
         assertThat(completed).isTrue();
     }
+
 
     @Test
     void asyncAwaitVersionShouldReturnOkWithJoin() {

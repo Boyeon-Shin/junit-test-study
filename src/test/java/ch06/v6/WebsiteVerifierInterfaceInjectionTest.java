@@ -9,7 +9,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 
-class WebsiteVerifierFunctionalInjectionTest {
+class WebsiteVerifierInterfaceInjectionTest {
 
     private NetworkAdapter makeStubNetworkWithResult(HealthResult fakeResult) {
         return url -> CompletableFuture.completedFuture(fakeResult);

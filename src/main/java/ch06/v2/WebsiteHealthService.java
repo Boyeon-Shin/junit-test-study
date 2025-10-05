@@ -25,6 +25,8 @@ public class WebsiteHealthService {
                 .GET()
                 .build();
 
+        System.out.println("1. sendAsync 호출 전");
+
         client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(this::throwOnInvalidResponse)  // 응답 검증
                 .thenApply(HttpResponse::body)            // body 추출
@@ -33,7 +35,10 @@ public class WebsiteHealthService {
                     processFetchError(err, callback);
                     return null;
                 });
+
+        System.out.println("3. sendAsync 호출 직후");
     }
+
 
     private HttpResponse<String> throwOnInvalidResponse(HttpResponse<String> resp) {
         if (resp.statusCode() / 100 != 2) {
@@ -46,6 +51,8 @@ public class WebsiteHealthService {
      *  성공 로직만 따로 분리 (순수 함수)
      */
     public void processFetchSuccess(String text, Consumer<HealthResult> callback) {
+        System.out.println("2. 응답 도착 후 body 처리");
+
         if (text.contains("illustrative")) {
             callback.accept(new HealthResult(true, "ok"));
         } else {

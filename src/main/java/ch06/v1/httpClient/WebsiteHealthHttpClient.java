@@ -58,7 +58,6 @@ public class WebsiteHealthHttpClient {
                     }
                     throw new RuntimeException("text missing");
                 })
-                .thenApply(bodyResult -> bodyResult)
                 .exceptionally(ex -> {
                     return new HealthResult(false, ex.getMessage());
                 });
