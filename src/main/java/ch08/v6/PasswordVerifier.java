@@ -1,4 +1,4 @@
-package ch08.v5;
+package ch08.v6;
 
 import ch08.IResult;
 import java.util.List;
@@ -7,23 +7,29 @@ import java.util.stream.Collectors;
 
 public class PasswordVerifier {
     private final List<Predicate<String>> rules;
+    private String msg =  "";
 
     public PasswordVerifier(List<Predicate<String>> rules) {
         this.rules = rules;
     }
 
-    public List<IResult> verify(List<String> inputs) {
-        return inputs.stream()
-                .map(this::checkSingleInput)
-                .collect(Collectors.toList());
+    public String getMsg() {
+        return msg;
     }
 
-    public boolean findResultFor(List<IResult> results, String input) {
-        return results.stream()
-                .filter(res -> res.input().equals(input))
-                .findFirst()
-                .map(IResult::result)
-                .orElse(false);
+    public List<IResult> verify(List<String> input) {
+        List<IResult> allResults = input.stream()
+                .map(this::checkSingleInput)
+                .collect(Collectors.toList());
+        setDescription(allResults);
+        return allResults;
+    }
+
+    private void setDescription(List<IResult> results) {
+        long failedCount = results.stream()
+                .filter(rs -> !rs.result())
+                .count();
+        this.msg = "you have " + failedCount + " failed rules.";
     }
 
     private IResult checkSingleInput(String input) {
